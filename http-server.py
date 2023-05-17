@@ -3,11 +3,15 @@ import socketserver
 import os
 import threading
 PORT = 8000
+fibo1_weight = 4
+fibo2_weight = 4
+fibo3_weight = 2
 
 class ThreadedHTTPServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
     pass
 
 class MyHandler(http.server.BaseHTTPRequestHandler):
+
 
     lock = threading.Lock()
     
@@ -17,13 +21,13 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
-            if count > 0 and count < 7:
+            if count > 0 and count < fibo1_weight + 1:
                 # 192.168.56.11:31112/function/fibo1
                 message = f"The current count is: {count} fibo1\n"
-            elif count > 6 and count < 10:
+            elif count > fibo1_weight and count < fibo1_weight + fibo2_weight + 1:
                 # 192.168.56.11:31112/function/fibo2
                 message = f"The current count is: {count} fibo2\n"
-            elif count > 9:
+            elif count > fibo1_weight + fibo2_weight:
                 # 192.168.56.11:31112/function/fibo3
                 message = f"The current count is: {count} fibo3\n"
             self.wfile.write(bytes(message, "utf8"))
